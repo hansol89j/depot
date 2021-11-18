@@ -59,6 +59,16 @@ class ProductsController < ApplicationController
     end
   end
 
+  def who_bought
+    @product = Product.find(params[:id])
+    @latest_order = @product.orders.order(:updated_at).last
+    if stable?(@latest_order)
+      respond_to do |format|
+        format.atom
+      end 
+    end 
+  end 
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_product
@@ -67,6 +77,6 @@ class ProductsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def product_params
-      params.require(:product).permit(:title, :description, :image_url, :price)
+      params.require(:product).permit(:title, :description, :price)
     end
 end
